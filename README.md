@@ -8,10 +8,18 @@ A small Node.js service that:
 
 ---
 
+## Deployed link: 
+```bash
+https://kuvaka-assignment-bbt4.onrender.com
+```
+Test Api with postman:
+```bash
+https://www.postman.com/aerospace-cosmonaut-37948211/assignment/collection/tjca755/kuvaka-tech-assignment?action=share&creator=0
+```
 ## Prerequisites
 
 • Node.js v19+ & npm  
-• An OpenAI API key 
+• An GEMENI API key 
 
 ---
 
@@ -114,7 +122,7 @@ curl http://localhost:3000/api/v1/results
 all six fields present → +10
 
 # AI Layer (0–50 pts)
-We ask ChatGPT to classify intent and justify in 1–2 sentences.
+We ask GEMENI to classify intent and justify in 1–2 sentences.
 
 Prompt template:
 ```bash
