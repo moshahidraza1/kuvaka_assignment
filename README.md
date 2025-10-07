@@ -37,7 +37,7 @@ npm install
 
 3. add a .env file
 ```bash
-OPENAI_API_KEY=sk-...
+GEMINI_API_KEY=AI...
 ```
 4. Start the dev server
 ```bash
