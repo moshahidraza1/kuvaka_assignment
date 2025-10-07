@@ -1,4 +1,4 @@
-const ruleScore = (lead, offer)=>{
+export const ruleScore = (lead, offer)=>{
     let score = 0;
 // role - decision maker or influencer
    const role = lead.role?.toLowerCase() || '';
@@ -10,7 +10,7 @@ const ruleScore = (lead, offer)=>{
 // industry matching
   const leadIndustry = (lead.industry || '').toLowerCase();
   const exact = offer.ideal_use_cases.map(i => i.toLowerCase());
-  
+
   const adjacentMap = {
     'b2b saas mid-market':    ['cloud services', 'enterprise software'],
     'healthcare':             ['healthtech'],
