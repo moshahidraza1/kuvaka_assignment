@@ -2,8 +2,9 @@
   "name": "kuvaka_assignment",
   "version": "1.0.0",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node src/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,11 @@
     "url": "https://github.com/moshahidraza1/kuvaka_assignment/issues"
   },
   "homepage": "https://github.com/moshahidraza1/kuvaka_assignment#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  }
 }
