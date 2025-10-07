@@ -1,0 +1,19 @@
+{
+  "name": "kuvaka_assignment",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moshahidraza1/kuvaka_assignment.git"
+  },
+  "author": "Mohd moshahid Raza Khan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/moshahidraza1/kuvaka_assignment/issues"
+  },
+  "homepage": "https://github.com/moshahidraza1/kuvaka_assignment#readme",
+  "description": ""
+}
