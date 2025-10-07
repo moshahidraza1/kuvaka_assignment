@@ -21,8 +21,34 @@ const setOfferDetails = (req, res)=>{
     }
 
     setOffer(req.body);
-    res.status(200).json({
+    res.status(201).json({
         message: "Offer details saved successfully",
         offer: req.body
     })
 };
+
+// upload leads
+const uploadLeads = (req, res)=>{
+    if(!req.file){
+        return res.status(400).json({
+            message: "No csv file uploaded"
+        });
+    }
+    const leads = [];
+    const bufferStream = new stream.PassThrough();
+    bufferStream.end(req.file.buffer);
+    //TODO: normalize values(lowercase)
+    bufferStream.pipe(csv()).on('data', (data)=> leads.push(data)).on('end', ()=>{
+        setLeads(leads);
+        res.status(200).json({
+            message: `${leads.length} leads uploaded successfully`
+        }).on('error', (error)=>{
+            console.error("CSV parsing error: error");
+            res.status(500).json({
+                message: "Failed to upload leads"
+            })
+        })
+    })
+}
+
+export{setOfferDetails,uploadLeads}
