@@ -19,6 +19,7 @@
   "homepage": "https://github.com/moshahidraza1/kuvaka_assignment#readme",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "cors": "^2.8.5",
     "csv-parser": "^3.2.0",
     "dotenv": "^17.2.3",

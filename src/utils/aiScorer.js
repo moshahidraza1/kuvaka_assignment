@@ -1,45 +1,58 @@
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { ruleScore } from './ruleScorer.js';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
+// Initialize with your API key
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// calls chatGPT for ranking
-export const callAIModel= async (lead, offer)=> {
-  const prompt = `
+/**
+ * Calls the Gemini Pro model using a simple API key.
+ * If it fails for any reason (like rate limits), it will fall back
+ * to a rule-based score without crashing the app.
+ */
+export async function callAIModel(lead, offer) {
+  try {
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+
+    const prompt = `
 Product: "${offer.name}"
-Value props: [${offer.value_props.join(", ")}]
-Use cases: [${offer.ideal_use_cases.join(", ")}]
+Value props: [${offer.value_props.join(', ')}]
+Use cases: [${offer.ideal_use_cases.join(', ')}]
 
 Prospect:
-- name: ${lead.name}
 - role: ${lead.role}
-- company: ${lead.company}
 - industry: ${lead.industry}
-- location: ${lead.location}
 - bio: "${lead.linkedin_bio}"
 
-Classify intent as High / Medium / Low and explain in 1-2 sentences.
-
-Respond exactly as:
+Classify buying intent as High, Medium, or Low and explain in one sentence.
+Respond in this exact format:
 intent: <High|Medium|Low>
-reasoning: <your explanation>
-  `.trim();
+reasoning: <Your one sentence explanation>
+    `.trim();
 
-  const res = await openai.chat.completions.create({
-    model: "gpt-3.5-turbo",
-    messages: [
-      { role: "system", content: "You are a sales qualification assistant." },
-      { role: "user", content: prompt }
-    ],
-    temperature: 0.2,
-  });
-  const text = res.choices?.[0]?.message?.content || "";
-  const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
-  const intentLine    = lines.find(l => l.toLowerCase().startsWith("intent:")) || "";
-  const reasoningLine = lines.find(l => l.toLowerCase().startsWith("reasoning:")) || "";
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    const text = response.text();
 
-  const intent    = intentLine.split(":")[1]?.trim() || "Low";
-  const reasoning = reasoningLine.split(":")[1]?.trim() || "";
-  return { intent, reasoning };
+    const intent = (text.match(/intent:\s*(High|Medium|Low)/i) || [])[1] || 'Low';
+    const reasoning = (text.match(/reasoning:\s*(.*)/i) || [])[1] || 'AI response parsing failed.';
+
+    return { intent, reasoning };
+
+  } catch (error) {
+    console.error('Gemini API call failed. Falling back to rule-based scoring.', error);
+    
+    // Fallback logic
+    const rScore = ruleScore(lead, offer);
+    let intent = 'Low';
+    if (rScore >= 40) {
+      intent = 'High';
+    } else if (rScore >= 25) {
+      intent = 'Medium';
+    }
+    
+    return {
+      intent: intent,
+      reasoning: `AI model failed. Fallback classification based on rule score of ${rScore}.`
+    };
+  }
 }
