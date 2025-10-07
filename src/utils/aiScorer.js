@@ -5,7 +5,7 @@ const openai = new OpenAI({
 });
 
 // calls chatGPT for ranking
-const callAIModel= async (lead, offer)=> {
+export const callAIModel= async (lead, offer)=> {
   const prompt = `
 Product: "${offer.name}"
 Value props: [${offer.value_props.join(", ")}]
