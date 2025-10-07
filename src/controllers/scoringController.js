@@ -42,3 +42,32 @@ export const getResults = (req, res) => {
   const scored = getScoredLeads();
   return res.status(200).json(scored);
 };
+
+// export results as csv
+
+export const exportResultsCSV = (req, res) => {
+  const results = getScoredLeads();
+  if (!results.length) {
+    return res.status(404).send("No scoring results to export");
+  }
+
+  // build header
+  const headers = [
+    "name",
+    "role",
+    "company",
+    "industry",
+    "location",
+    "linkedin_bio",
+    "intent",
+    "score",
+    "reasoning"
+  ];
+  const rows = results.map(r =>
+    headers.map(h => `"${(r[h] || "").toString().replace(/"/g, '""')}"`).join(",")
+  );
+
+  res.setHeader("Content-Type", "text/csv");
+  res.setHeader("Content-Disposition", `attachment; filename="scored_leads.csv"`);
+  res.send([headers.join(","), ...rows].join("\n"));
+};
